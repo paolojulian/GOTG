@@ -1,10 +1,24 @@
 import Board from "./classes/Board";
+import Piece from "./classes/Piece";
+import UnitPrivate from "./classes/UnitPrivate";
 
 let CANVAS: HTMLCanvasElement | null, CTX: CanvasRenderingContext2D | null;
 
 const ROW_COUNT = 8;
 const COL_COUNT = 9;
 const BLOCK_SIZE = 100;
+const DEFAULT_POSITIONS = {
+  you: [
+    new UnitPrivate(2, 3, BLOCK_SIZE, BLOCK_SIZE),
+    new UnitPrivate(2, 4, BLOCK_SIZE, BLOCK_SIZE),
+    new UnitPrivate(2, 5, BLOCK_SIZE, BLOCK_SIZE)
+  ],
+  enemy: [
+    new UnitPrivate(5, 2, BLOCK_SIZE, BLOCK_SIZE),
+    new UnitPrivate(5, 4, BLOCK_SIZE, BLOCK_SIZE),
+    new UnitPrivate(5, 8, BLOCK_SIZE, BLOCK_SIZE)
+  ]
+};
 
 initializeCanvas();
 gameLoop();
@@ -27,9 +41,10 @@ function initializeCanvas() {
 }
 
 function gameLoop() {
-  if (!CTX || !CANVAS) {
+  if (CTX === null || CANVAS === null) {
     return;
   }
+
   // Clear the canvas first
   CTX.clearRect(0, 0, CANVAS.width, CANVAS.width);
 
@@ -41,5 +56,17 @@ function gameLoop() {
     COL_COUNT
   );
   board.draw(CTX);
-  requestAnimationFrame(gameLoop);
+
+  DEFAULT_POSITIONS.you.forEach((piece: Piece) => {
+    if (CTX !== null) {
+      piece.draw(CTX);
+    }
+  });
+  DEFAULT_POSITIONS.enemy.forEach((piece: Piece) => {
+    if (CTX !== null) {
+      piece.draw(CTX);
+    }
+  });
+
+  // requestAnimationFrame(gameLoop);
 }
