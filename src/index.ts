@@ -1,6 +1,6 @@
 import Board from "./classes/Board";
-import Piece from "./classes/Piece";
-import UnitPrivate from "./classes/UnitPrivate";
+import Piece from "./classes/Pieces/Piece";
+import UnitPrivate from "./classes/Pieces/UnitPrivate";
 
 let CANVAS: HTMLCanvasElement | null, CTX: CanvasRenderingContext2D | null;
 
@@ -9,14 +9,14 @@ const COL_COUNT = 9;
 const BLOCK_SIZE = 100;
 const DEFAULT_POSITIONS = {
   you: [
-    new UnitPrivate(2, 3, BLOCK_SIZE, BLOCK_SIZE),
-    new UnitPrivate(2, 4, BLOCK_SIZE, BLOCK_SIZE),
-    new UnitPrivate(2, 5, BLOCK_SIZE, BLOCK_SIZE)
-  ],
-  enemy: [
     new UnitPrivate(5, 2, BLOCK_SIZE, BLOCK_SIZE),
     new UnitPrivate(5, 4, BLOCK_SIZE, BLOCK_SIZE),
     new UnitPrivate(5, 8, BLOCK_SIZE, BLOCK_SIZE)
+  ],
+  enemy: [
+    new UnitPrivate(2, 3, BLOCK_SIZE, BLOCK_SIZE),
+    new UnitPrivate(2, 4, BLOCK_SIZE, BLOCK_SIZE),
+    new UnitPrivate(2, 5, BLOCK_SIZE, BLOCK_SIZE)
   ]
 };
 
@@ -57,6 +57,7 @@ function gameLoop() {
   );
   board.draw(CTX);
 
+  // Load default positions of the pieces
   DEFAULT_POSITIONS.you.forEach((piece: Piece) => {
     if (CTX !== null) {
       piece.draw(CTX);
