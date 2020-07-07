@@ -7,6 +7,7 @@ html {
   box-sizing: border-box;
 }
 .start-game {
+  margin: auto;
   position: absolute;
   left: 50%;
   top: 50%;
@@ -20,8 +21,8 @@ html {
   transform: translate(-50%, -50%);
   background-color: #fafafa;
   box-shadow: 0 0 20px 10px rgba(0, 0, 0, 0.6);
+  display: block;
 }
-
 #game.hidden {
   display: none;
   width: 0;
@@ -34,4 +35,3 @@ html {
   width: 100%;
   margin: auto;
   display: block;
-}
