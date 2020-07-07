@@ -4,6 +4,7 @@ import UnitPrivate from "./classes/Pieces/UnitPrivate";
 
 let CANVAS: HTMLCanvasElement | null, CTX: CanvasRenderingContext2D | null;
 
+let gameInProgress: boolean = false;
 const ROW_COUNT = 8;
 const COL_COUNT = 9;
 const BLOCK_SIZE = 100;
@@ -14,14 +15,31 @@ const DEFAULT_POSITIONS = {
     new UnitPrivate(5, 8, BLOCK_SIZE, BLOCK_SIZE)
   ],
   enemy: [
-    new UnitPrivate(2, 3, BLOCK_SIZE, BLOCK_SIZE),
+    new UnitPrivate(0, 0, BLOCK_SIZE, BLOCK_SIZE),
     new UnitPrivate(2, 4, BLOCK_SIZE, BLOCK_SIZE),
     new UnitPrivate(2, 5, BLOCK_SIZE, BLOCK_SIZE)
   ]
 };
 
-initializeCanvas();
-gameLoop();
+const _startGameBtn: HTMLButtonElement | null = document.querySelector(
+  ".start-game"
+);
+const _gameDiv: HTMLDivElement | null = document.querySelector("#game");
+if (_startGameBtn !== null) {
+  _startGameBtn.addEventListener("click", () => {
+    if (_gameDiv === null) {
+      return;
+    }
+    if (!gameInProgress) {
+      _gameDiv.classList.remove("hidden");
+      initializeCanvas();
+      gameLoop();
+    } else {
+      _gameDiv.classList.add("hidden");
+    }
+    gameInProgress = !gameInProgress;
+  });
+}
 
 function initializeCanvas() {
   CANVAS = document.querySelector("#canvas");
@@ -65,7 +83,7 @@ function gameLoop() {
   });
   DEFAULT_POSITIONS.enemy.forEach((piece: Piece) => {
     if (CTX !== null) {
-      piece.draw(CTX);
+      piece.draw(CTX, true);
     }
   });
 
