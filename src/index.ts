@@ -83,7 +83,7 @@ function gameLoop() {
   });
   DEFAULT_POSITIONS.enemy.forEach((piece: Piece) => {
     if (CTX !== null) {
-      piece.draw(CTX, true);
+      piece.draw(CTX);
     }
   });
 
