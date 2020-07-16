@@ -28,23 +28,17 @@ export default class Piece {
       console.error("Image of the piece was not loaded");
       return;
     }
-
     const imageCoords = {
       x: this.col * this.width + 10,
       y: this.row * this.height + 10
     };
 
-    this.img.onload = () => {
-      if (this.img === null) {
-        return;
-      }
-      ctx.drawImage(
-        this.img,
-        imageCoords.x,
-        imageCoords.y,
-        this.width - 20,
-        this.height - 20
-      );
-    };
+    ctx.drawImage(
+      this.img,
+      imageCoords.x,
+      imageCoords.y,
+      this.width - 20,
+      this.height - 20
+    );
   }
 }

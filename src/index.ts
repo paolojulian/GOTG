@@ -2,7 +2,7 @@ import Board from "./classes/Board";
 import Piece from "./classes/Pieces/Piece";
 import UnitPrivate from "./classes/Pieces/UnitPrivate";
 
-let CANVAS: HTMLCanvasElement | null, CTX: CanvasRenderingContext2D | null;
+let CANVAS: HTMLCanvasElement, CTX: CanvasRenderingContext2D;
 
 let gameInProgress: boolean = false;
 const ROW_COUNT = 8;
@@ -21,48 +21,31 @@ const DEFAULT_POSITIONS = {
   ]
 };
 
-const _startGameBtn: HTMLButtonElement | null = document.querySelector(
+const _startGameBtn: HTMLButtonElement = document.querySelector(
   ".start-game"
-);
-const _gameDiv: HTMLDivElement | null = document.querySelector("#game");
-if (_startGameBtn !== null) {
-  _startGameBtn.addEventListener("click", () => {
-    if (_gameDiv === null) {
-      return;
-    }
-    if (!gameInProgress) {
-      _gameDiv.classList.remove("hidden");
-      initializeCanvas();
-      gameLoop();
-    } else {
-      _gameDiv.classList.add("hidden");
-    }
-    gameInProgress = !gameInProgress;
-  });
-}
+) as HTMLButtonElement;
+const _gameDiv: HTMLDivElement = document.querySelector(
+  "#game"
+) as HTMLDivElement;
+
+_startGameBtn.addEventListener("click", () => {
+  if (!gameInProgress) {
+    _gameDiv.classList.remove("hidden");
+    initializeCanvas();
+    gameLoop();
+  } else {
+    _gameDiv.classList.add("hidden");
+  }
+  gameInProgress = !gameInProgress;
+});
 
 function initializeCanvas() {
-  CANVAS = document.querySelector("#canvas");
-  if (CANVAS === null) {
-    console.error("Unable to select the canvas");
-    return;
-  }
+  CANVAS = document.querySelector("#canvas") as HTMLCanvasElement;
 
-  CTX = CANVAS.getContext("2d");
-  if (CTX === null) {
-    console.error("Unable to get 2d context of the canvas");
-    return;
-  }
+  CTX = CANVAS.getContext("2d") as CanvasRenderingContext2D;
 
   CANVAS.height = BLOCK_SIZE * ROW_COUNT;
   CANVAS.width = BLOCK_SIZE * COL_COUNT;
-}
-
-function gameLoop() {
-  if (CTX === null || CANVAS === null) {
-    return;
-  }
-
   // Clear the canvas first
   CTX.clearRect(0, 0, CANVAS.width, CANVAS.width);
 
@@ -75,16 +58,17 @@ function gameLoop() {
   );
   board.draw(CTX);
 
+  // Add canvas click event
+  CANVAS.addEventListener("click", e => {});
+}
+
+function gameLoop() {
   // Load default positions of the pieces
   DEFAULT_POSITIONS.you.forEach((piece: Piece) => {
-    if (CTX !== null) {
-      piece.draw(CTX);
-    }
+    piece.draw(CTX);
   });
   DEFAULT_POSITIONS.enemy.forEach((piece: Piece) => {
-    if (CTX !== null) {
-      piece.draw(CTX);
-    }
+    piece.draw(CTX);
   });
 
   // requestAnimationFrame(gameLoop);
