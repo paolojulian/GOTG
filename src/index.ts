@@ -58,8 +58,16 @@ function initializeCanvas() {
   );
   board.draw(CTX);
 
+  const rect = CANVAS.getBoundingClientRect();
   // Add canvas click event
-  CANVAS.addEventListener("click", e => {});
+  CANVAS.addEventListener("click", (e: MouseEvent) => {
+    const boardPosX = Math.abs(e.clientX - rect.left);
+    const boardPosY = Math.abs(e.clientY - rect.top);
+    const posX = Math.floor(boardPosX / COL_COUNT);
+    const posY = Math.floor(boardPosY / ROW_COUNT);
+    console.log(`boardPosX: ${boardPosX}, posX: ${posX}`);
+    console.log(`boardPosY: ${boardPosY}, posY: ${posY}`);
+  });
 }
 
 function gameLoop() {
