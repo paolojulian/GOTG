@@ -59,14 +59,18 @@ function initializeCanvas() {
   board.draw(CTX);
 
   const rect = CANVAS.getBoundingClientRect();
+  const clientBlockSize = CANVAS.clientWidth / COL_COUNT;
   // Add canvas click event
   CANVAS.addEventListener("click", (e: MouseEvent) => {
     const boardPosX = Math.abs(e.clientX - rect.left);
     const boardPosY = Math.abs(e.clientY - rect.top);
-    const posX = Math.floor(boardPosX / COL_COUNT);
-    const posY = Math.floor(boardPosY / ROW_COUNT);
-    console.log(`boardPosX: ${boardPosX}, posX: ${posX}`);
-    console.log(`boardPosY: ${boardPosY}, posY: ${posY}`);
+    const posX = Math.floor(boardPosX / clientBlockSize);
+    const posY = Math.floor(boardPosY / clientBlockSize);
+    console.log(posX, posY);
+    const piece = getPiece(posY, posX);
+    if (piece) {
+      piece.select();
+    }
   });
 }
 
@@ -80,4 +84,15 @@ function gameLoop() {
   });
 
   // requestAnimationFrame(gameLoop);
+}
+
+/**
+ * Gets the piece based on the given coordinates
+ * @param row
+ * @param col
+ */
+function getPiece(row: number, col: number): Piece | undefined {
+  return DEFAULT_POSITIONS.you.find((piece: Piece) => {
+    return piece.col === col && piece.row === row;
+  });
 }
