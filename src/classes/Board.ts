@@ -17,6 +17,7 @@ export default class Board {
   }
 
   draw(context: CanvasRenderingContext2D) {
+    context.beginPath()
     for (let iRow = 0; iRow < this.rowCount; iRow++) {
       for (let iCol = 0; iCol < this.colCount; iCol++) {
         context.fillStyle = (iRow + iCol) % 2 === 0 ? "#333" : "#777";

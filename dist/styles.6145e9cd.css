@@ -1,0 +1,38 @@
+html {
+  background-color: #333333;
+}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+.start-game {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+#game {
+  margin: auto;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fafafa;
+  box-shadow: 0 0 20px 10px rgba(0, 0, 0, 0.6);
+}
+.hidden {
+  display: none;
+  width: 0;
+  height: 0;
+}
+#canvas {
+  background-color: #eaeaea;
+  border: 1px solid rgba(0, 0, 0, 0.6);
+  width: 100%;
+  margin: auto;
+  display: block;
+}
+
+
+/*# sourceMappingURL=/styles.6145e9cd.css.map */

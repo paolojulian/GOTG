@@ -1,6 +1,7 @@
 import Board from "./classes/Board";
 import Piece from "./classes/Pieces/Piece";
 import UnitPrivate from "./classes/Pieces/UnitPrivate";
+import UnitEnemy from "./classes/Pieces/UnitEnemy";
 
 let CANVAS: HTMLCanvasElement, CTX: CanvasRenderingContext2D;
 
@@ -9,15 +10,15 @@ const ROW_COUNT = 8;
 const COL_COUNT = 9;
 const BLOCK_SIZE = 100;
 const DEFAULT_POSITIONS = {
-  you: [
+  self: [
     new UnitPrivate(5, 2, BLOCK_SIZE, BLOCK_SIZE),
     new UnitPrivate(5, 4, BLOCK_SIZE, BLOCK_SIZE),
     new UnitPrivate(5, 8, BLOCK_SIZE, BLOCK_SIZE)
   ],
   enemy: [
-    new UnitPrivate(0, 0, BLOCK_SIZE, BLOCK_SIZE),
-    new UnitPrivate(2, 4, BLOCK_SIZE, BLOCK_SIZE),
-    new UnitPrivate(2, 5, BLOCK_SIZE, BLOCK_SIZE)
+    new UnitEnemy(4, 2, BLOCK_SIZE, BLOCK_SIZE),
+    new UnitEnemy(2, 4, BLOCK_SIZE, BLOCK_SIZE),
+    new UnitEnemy(2, 5, BLOCK_SIZE, BLOCK_SIZE)
   ]
 };
 
@@ -32,7 +33,6 @@ _startGameBtn.addEventListener("click", () => {
   if (!gameInProgress) {
     _gameDiv.classList.remove("hidden");
     initializeCanvas();
-    gameLoop();
   } else {
     _gameDiv.classList.add("hidden");
   }
@@ -57,27 +57,121 @@ function initializeCanvas() {
     COL_COUNT
   );
   board.draw(CTX);
+  drawPieces();
+  CTX.save();
 
   const rect = CANVAS.getBoundingClientRect();
+  let currentPiece: Piece;
   // Add canvas click event
   CANVAS.addEventListener("click", (e: MouseEvent) => {
+    CTX.clearRect(0, 0, CANVAS.width, CANVAS.height);
+    board.draw(CTX);
+    drawPieces();
+    const clientBlockSize = CANVAS.clientWidth / COL_COUNT;
     const boardPosX = Math.abs(e.clientX - rect.left);
     const boardPosY = Math.abs(e.clientY - rect.top);
-    const posX = Math.floor(boardPosX / COL_COUNT);
-    const posY = Math.floor(boardPosY / ROW_COUNT);
-    console.log(`boardPosX: ${boardPosX}, posX: ${posX}`);
-    console.log(`boardPosY: ${boardPosY}, posY: ${posY}`);
+    const posX = Math.floor(boardPosX / clientBlockSize);
+    const posY = Math.floor(boardPosY / clientBlockSize);
+    const piece = getPiece(posX, posY, 'self');
+    // Clear all rect
+    if (currentPiece) {
+    }
+
+    if (piece) {
+      currentPiece = piece
+      // Display valid Moves
+      // Forward
+      const forwardBlock = getPiece(posX, posY - 1, 'all')
+      if (!forwardBlock) {
+        drawMove(posX, posY - 1, "move");
+      } else if (forwardBlock instanceof UnitEnemy) {
+        drawMove(posX, posY - 1, "attack");
+      }
+      // Backward
+      const backwardBlock = getPiece(posX, posY + 1, 'all')
+      if (!backwardBlock) {
+        drawMove(posX, posY + 1, "move");
+      } else if (forwardBlock instanceof UnitEnemy) {
+        drawMove(posX, posY + 1, "attack");
+      }
+      // Left 
+      const leftBlock = getPiece(posX - 1, posY, 'all')
+      if (!leftBlock) {
+        drawMove(posX - 1, posY, "move");
+      } else if (forwardBlock instanceof UnitEnemy) {
+        drawMove(posX - 1, posY, "attack");
+      }
+      // Right
+      const rightBlock = getPiece(posX + 1, posY, 'all')
+      if (!rightBlock) {
+        drawMove(posX + 1, posY, "move");
+      } else if (forwardBlock instanceof UnitEnemy) {
+        drawMove(posX + 1, posY, "attack");
+      }
+    }
   });
 }
 
-function gameLoop() {
+function drawMove(x: number, y: number, type: string) {
+  let color: string;
+  switch (type) {
+    case "move":
+      color = 'green'
+      break;
+    case "attack":
+      color = 'red'
+      break;
+    default:
+      throw new Error("Invalid type for drawMove")
+  }
+  CTX.beginPath();
+  CTX.lineWidth = 4;
+  CTX.strokeStyle = color;
+  CTX.rect(
+    x * BLOCK_SIZE,
+    y * BLOCK_SIZE,
+    BLOCK_SIZE,
+    BLOCK_SIZE
+  );
+  CTX.stroke();
+}
+
+function drawPieces() {
   // Load default positions of the pieces
-  DEFAULT_POSITIONS.you.forEach((piece: Piece) => {
+  DEFAULT_POSITIONS.self.forEach((piece: Piece) => {
     piece.draw(CTX);
   });
   DEFAULT_POSITIONS.enemy.forEach((piece: Piece) => {
     piece.draw(CTX);
   });
 
-  // requestAnimationFrame(gameLoop);
+  // requestAnimationFrame(drawPieces);
+}
+
+/**
+ * Gets the piece based on the given coordinates
+ * @param col
+ * @param row
+ */
+function getPiece(col: number, row: number, type: string): Piece | undefined {
+  let pieces: Array<any> = []
+  switch (type) {
+    case "self":
+      pieces = DEFAULT_POSITIONS.self
+      break;
+    case "enemy":
+      pieces = DEFAULT_POSITIONS.enemy
+      break;
+    case "all":
+      pieces = [
+        ...DEFAULT_POSITIONS.self,
+        ...DEFAULT_POSITIONS.enemy
+      ]
+      break;
+    default:
+      throw new Error('Invalid type for getPiece')
+  }
+  return pieces.find((piece: Piece) => {
+    return piece.col === col && piece.row === row;
+  });
 }
