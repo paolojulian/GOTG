@@ -12,7 +12,7 @@ const BLOCK_SIZE = 100;
 const DEFAULT_POSITIONS = {
   self: [
     new UnitPrivate(5, 2, BLOCK_SIZE, BLOCK_SIZE),
-    new UnitPrivate(5, 4, BLOCK_SIZE, BLOCK_SIZE),
+    new UnitPrivate(5, 3, BLOCK_SIZE, BLOCK_SIZE),
     new UnitPrivate(5, 8, BLOCK_SIZE, BLOCK_SIZE)
   ],
   enemy: [
@@ -91,21 +91,21 @@ function initializeCanvas() {
       const backwardBlock = getPiece(posX, posY + 1, 'all')
       if (!backwardBlock) {
         drawMove(posX, posY + 1, "move");
-      } else if (forwardBlock instanceof UnitEnemy) {
+      } else if (backwardBlock instanceof UnitEnemy) {
         drawMove(posX, posY + 1, "attack");
       }
       // Left 
       const leftBlock = getPiece(posX - 1, posY, 'all')
       if (!leftBlock) {
         drawMove(posX - 1, posY, "move");
-      } else if (forwardBlock instanceof UnitEnemy) {
+      } else if (leftBlock instanceof UnitEnemy) {
         drawMove(posX - 1, posY, "attack");
       }
       // Right
       const rightBlock = getPiece(posX + 1, posY, 'all')
       if (!rightBlock) {
         drawMove(posX + 1, posY, "move");
-      } else if (forwardBlock instanceof UnitEnemy) {
+      } else if (rightBlock instanceof UnitEnemy) {
         drawMove(posX + 1, posY, "attack");
       }
     }
