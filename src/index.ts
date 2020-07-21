@@ -5,6 +5,11 @@ import UnitEnemy from "./classes/Pieces/UnitEnemy";
 
 let CANVAS: HTMLCanvasElement, CTX: CanvasRenderingContext2D;
 
+interface BoardPosition {
+  row: number;
+  col: number;
+}
+
 let gameInProgress: boolean = false;
 const ROW_COUNT = 8;
 const COL_COUNT = 9;
@@ -62,6 +67,7 @@ function initializeCanvas() {
 
   const rect = CANVAS.getBoundingClientRect();
   let currentPiece: Piece;
+  let validMoves: Array<BoardPosition> = [];
   // Add canvas click event
   CANVAS.addEventListener("click", (e: MouseEvent) => {
     CTX.clearRect(0, 0, CANVAS.width, CANVAS.height);
@@ -73,16 +79,42 @@ function initializeCanvas() {
     const posX = Math.floor(boardPosX / clientBlockSize);
     const posY = Math.floor(boardPosY / clientBlockSize);
     const piece = getPiece(posX, posY, 'self');
-    // Clear all rect
+    const position: BoardPosition = { col: posX, row: posY }
+    
     if (currentPiece) {
+      // Check if clicked pos is move or attack
+      if (piece instanceof UnitEnemy) {
+        // attack
+        // end turn
+      } else if (!piece) {
+        // Is valid move
+        if (validMoves.find(pos => pos.col === position.col && pos.row === position.row)) {
+          // move piece
+          currentPiece.row = posY
+          currentPiece.col = posX
+          const newPositions = DEFAULT_POSITIONS.self.filter((piece: Piece) => {
+            return piece.col != posX && piece.row !== posY
+          })
+          newPositions.push(currentPiece)
+          CTX.clearRect(0, 0, CANVAS.width, CANVAS.height);
+          board.draw(CTX);
+          drawPieces();
+        }
+      }
+    }
+
+    if (!piece) {
+      currentPiece = undefined
     }
 
     if (piece) {
       currentPiece = piece
+      validMoves = []
       // Display valid Moves
       // Forward
       const forwardBlock = getPiece(posX, posY - 1, 'all')
       if (!forwardBlock) {
+        validMoves.push({ col: posX, row: posY - 1 })
         drawMove(posX, posY - 1, "move");
       } else if (forwardBlock instanceof UnitEnemy) {
         drawMove(posX, posY - 1, "attack");
@@ -90,6 +122,7 @@ function initializeCanvas() {
       // Backward
       const backwardBlock = getPiece(posX, posY + 1, 'all')
       if (!backwardBlock) {
+        validMoves.push({ col: posX, row: posY + 1 })
         drawMove(posX, posY + 1, "move");
       } else if (backwardBlock instanceof UnitEnemy) {
         drawMove(posX, posY + 1, "attack");
@@ -97,6 +130,7 @@ function initializeCanvas() {
       // Left 
       const leftBlock = getPiece(posX - 1, posY, 'all')
       if (!leftBlock) {
+        validMoves.push({ col: posX - 1, row: posY })
         drawMove(posX - 1, posY, "move");
       } else if (leftBlock instanceof UnitEnemy) {
         drawMove(posX - 1, posY, "attack");
@@ -104,6 +138,7 @@ function initializeCanvas() {
       // Right
       const rightBlock = getPiece(posX + 1, posY, 'all')
       if (!rightBlock) {
+        validMoves.push({ col: posX + 1, row: posY })
         drawMove(posX + 1, posY, "move");
       } else if (rightBlock instanceof UnitEnemy) {
         drawMove(posX + 1, posY, "attack");
@@ -174,4 +209,8 @@ function getPiece(col: number, row: number, type: string): Piece | undefined {
   return pieces.find((piece: Piece) => {
     return piece.col === col && piece.row === row;
   });
+}
+
+function movePiece (piece: Piece, position: BoardPosition, validMoves: Array<BoardPosition>) {
+
 }
