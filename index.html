@@ -1,10 +1,11 @@
-<html>
-  <head>
-    <title>Parcel Sandbox</title>
-    <meta charset="UTF-8" />
-    <link rel="stylesheet" href="styles/index.css" />
-  </head>
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
+  <title>Game of the generals</title>
+  <link rel="stylesheet" href="assets/css/index.css" />
+</head>
   <body>
     <!-- Unit Images here -->
     <img class="hidden" id="unit_enemy" src="/assets/img/enemy.png" />
@@ -23,10 +24,18 @@
     <img class="hidden" id="unit_4star_general" src="/assets/img/4star_general.png" />
     <img class="hidden" id="unit_5star_general" src="/assets/img/5star_general.png" />
 
-    <button class="start-game">Start</button>
+    <div class="top-page">
+      <div class="title">Game of the generals</div>
+      <button class="start-game js-find-match">Find Match</button>
+    </div>
+
+    <div class="piece-selection">
+
+    </div>
+
     <div id="game" class="hidden">
       <canvas id="canvas" width="900" height="800"></canvas>
     </div>
-    <script src="src/index.ts"></script>
+    <script type="module" src="dist/index.js"></script>
   </body>
 </html>
