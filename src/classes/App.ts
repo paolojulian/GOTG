@@ -46,16 +46,20 @@ export class App {
      * Initialize listeners buttons
      */
     initListeners (): this {
+
+        // Find Match
         this.$findMatch_btn.addEventListener('click', async () => {
             this.$findMatch_btn.classList.add('hidden')
             this.$findingMatch_text.classList.remove('hidden')
             try {
                 await this.webSocketClient.findMatch()
                 // Match was found
+                // Hide game
                 this.$findMatch_btn.classList.remove('hidden')
                 this.$findingMatch_text.classList.add('hidden')
                 this.$topPage_div.classList.add('hidden')
-                this.$pieceSelection_div.classList.remove('hidden')
+
+                this.initPieceSelection()
             } catch (e) {
                 alert('Unable to find match.')
                 this.$findMatch_btn.classList.remove('hidden')
@@ -63,5 +67,10 @@ export class App {
             }
         })
         return this
+    }
+
+    initPieceSelection (): void {
+        this.$pieceSelection_div.classList.remove('hidden')
+        
     }
 }

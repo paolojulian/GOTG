@@ -1,0 +1,23 @@
+.top-page {
+    background-color: #131313;
+    color: #fafafa;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    flex-direction: column;
+}
+
+.top-page .title {
+    font-size: 5rem;
+    user-select: none;
+}
+
+.top-page .find-match button {
+    margin-top: 2rem;
+    font-size: 2rem;
+    padding: 1rem 3rem;
+    border-radius: 5px;
+}
