@@ -30,13 +30,7 @@ export default class WebSocketClient {
                     reject('An error has occured')
                     return
                 }
-
-                const data = response.data
-                switch (data) {
-                    case 'MatchFound':
-                        resolve()
-                        break
-                }
+                resolve()
             }
         })
     }
