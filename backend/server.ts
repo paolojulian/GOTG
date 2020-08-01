@@ -21,6 +21,15 @@ const playerMessages = {
     findMatch: 'FindMatch'
 }
 
+class APIResponse {
+    static jsonResponse (status: number, data: any = null): string {
+        return JSON.stringify({
+            status,
+            data
+        })
+    }
+}
+
 /**
  * The Player
  */
@@ -64,18 +73,22 @@ wss.on('connection', (ws: WebSocket, request: http.IncomingMessage) => {
         switch (message) {
             case playerMessages.findMatch:
                 if (matchQueue.length === 0) {
-                    //
-                    matchQueue.push(id)
+                    // No player in queue
+                    if (matchQueue.indexOf(id) === -1) {
+                        matchQueue.push(id)
+                    }
                 } else {
+                    // Match with another player
                     const playerIdToFace = matchQueue.pop()
-                    if (playerIdToFace) {
+                    if (playerIdToFace && playerIdToFace !== id) {
                         const opponent = players[playerIdToFace]
                         games.push({
                             white: opponent,
                             black: player
                         })
-                        player.ws.send('Match found.')
-                        opponent.ws.send('Match found.')
+                        const response = APIResponse.jsonResponse(200, 'MatchFound')
+                        player.ws.send(response)
+                        opponent.ws.send(response)
                     }
                 }
                 break
@@ -83,6 +96,11 @@ wss.on('connection', (ws: WebSocket, request: http.IncomingMessage) => {
                 break
         }
     });
+
+    ws.on('close', () => {
+        matchQueue.splice(matchQueue.indexOf(id), 1)
+        ws.send(APIResponse.jsonResponse(200, 'Disconnected'));
+    })
 
     ws.send('Connected!!!');
 });

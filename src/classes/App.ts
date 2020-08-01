@@ -5,6 +5,9 @@ export class App {
 
     // HTML Elements
     private $findMatch_btn: HTMLButtonElement
+    private $findingMatch_text: HTMLElement
+    private $topPage_div: HTMLDivElement
+    private $pieceSelection_div: HTMLDivElement
 
     constructor (webSocketClient: WebSocketClient) {
         this.webSocketClient = webSocketClient
@@ -22,6 +25,9 @@ export class App {
      */
     mapButtons (): void {
         this.$findMatch_btn = document.querySelector('.js-find-match') as HTMLButtonElement
+        this.$findingMatch_text = document.querySelector('.js-finding-match') as HTMLElement
+        this.$topPage_div = document.querySelector('.js-top-page') as HTMLDivElement
+        this.$pieceSelection_div = document.querySelector('.js-piece-selection') as HTMLDivElement
     }
 
     /**
@@ -41,10 +47,19 @@ export class App {
      */
     initListeners (): this {
         this.$findMatch_btn.addEventListener('click', async () => {
+            this.$findMatch_btn.classList.add('hidden')
+            this.$findingMatch_text.classList.remove('hidden')
             try {
                 await this.webSocketClient.findMatch()
+                // Match was found
+                this.$findMatch_btn.classList.remove('hidden')
+                this.$findingMatch_text.classList.add('hidden')
+                this.$topPage_div.classList.add('hidden')
+                this.$pieceSelection_div.classList.remove('hidden')
             } catch (e) {
                 alert('Unable to find match.')
+                this.$findMatch_btn.classList.remove('hidden')
+                this.$findingMatch_text.classList.add('hidden')
             }
         })
         return this

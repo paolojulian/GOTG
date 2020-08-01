@@ -10,8 +10,6 @@ export default class WebSocketClient {
         return new Promise((resolve, reject) => {
             this.connection = new WebSocket(this.url)
             this.connection.onopen = (e) => {
-                //eslint-disable-next-line
-                console.log(e)
                 resolve()
             }
             this.connection.onerror = (e) => {
@@ -20,7 +18,26 @@ export default class WebSocketClient {
         })
     }
 
-    findMatch (): void {
-        this.connection.send('FindMatch')
+    async findMatch (): Promise<void> {
+        return new Promise((resolve, reject) => {
+            this.connection.send('FindMatch')
+            this.connection.onmessage = (e) => {
+                if (!e.data) {
+                    return
+                }
+                const response = JSON.parse(e.data)
+                if (response.status !== 200) {
+                    reject('An error has occured')
+                    return
+                }
+
+                const data = response.data
+                switch (data) {
+                    case 'MatchFound':
+                        resolve()
+                        break
+                }
+            }
+        })
     }
 }
