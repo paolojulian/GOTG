@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint . --ext .ts",
-    "start": "concurrently \"tsc-watch\" \"npm start --prefix backend\"",
+    "start": "concurrently \"tsc-watch\" \"npm start --prefix backend\" \"http-server\"",
     "build": "rimraf ./dist && tsc",
     "prod": "npm run build && node dist/index.js"
   },
